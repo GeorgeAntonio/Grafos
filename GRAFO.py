@@ -33,6 +33,10 @@ class Grafo:
         # Verifica se dois vértices são adjacentes
         return v2 in self.grafo_lista[v1]
 
+    def total_vertices(self):
+        # Retorna o número total de vértices no grafo
+        return len(self.vertices)
+
     def construir_matriz_adjacencia(self):
         # Constrói a matriz de adjacência usando os vértices do grafo
         n = len(self.vertices)
@@ -138,6 +142,9 @@ def main():
     print("Vértices 'a' e 'b' são adjacentes?", grafo1.sao_adjacentes('a', 'b'))
     print("Vértices 'a' e 'd' são adjacentes?", grafo1.sao_adjacentes('a', 'd'))
 
+    # Questão 7: Número Total de Vértices
+    print("\nNúmero Total de Vértices no GRAFO1.txt:", grafo1.total_vertices())
+
     print("\n" + "="*30 + "\n")
 
     # Repetir para o GRAFO2.txt
@@ -173,6 +180,9 @@ def main():
     print("\nVerificação de Adjacência no GRAFO2.txt")
     print("Vértices '1' e '2' são adjacentes?", grafo2.sao_adjacentes('1', '2'))
     print("Vértices '1' e '4' são adjacentes?", grafo2.sao_adjacentes('1', '4'))
+
+    # Questão 7: Número Total de Vértices
+    print("\nNúmero Total de Vértices no GRAFO2.txt:", grafo2.total_vertices())
 
 if __name__ == "__main__":
     main()
