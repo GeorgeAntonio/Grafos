@@ -29,6 +29,10 @@ class Grafo:
             print(f"Vértice {vertice}: Grau {grau}")
         return graus
 
+    def sao_adjacentes(self, v1, v2):
+        # Verifica se dois vértices são adjacentes
+        return v2 in self.grafo_lista[v1]
+
     def construir_matriz_adjacencia(self):
         # Constrói a matriz de adjacência usando os vértices do grafo
         n = len(self.vertices)
@@ -129,6 +133,11 @@ def main():
     print("\nCálculo do Grau de cada Vértice para GRAFO1.txt")
     grafo1.calcular_grau()
 
+    # Questão 6: Verificar Adjacência entre Vértices
+    print("\nVerificação de Adjacência no GRAFO1.txt")
+    print("Vértices 'a' e 'b' são adjacentes?", grafo1.sao_adjacentes('a', 'b'))
+    print("Vértices 'a' e 'd' são adjacentes?", grafo1.sao_adjacentes('a', 'd'))
+
     print("\n" + "="*30 + "\n")
 
     # Repetir para o GRAFO2.txt
@@ -159,6 +168,11 @@ def main():
     # Questão 5: Cálculo do Grau de cada Vértice para GRAFO2
     print("\nCálculo do Grau de cada Vértice para GRAFO2.txt")
     grafo2.calcular_grau()
+
+    # Questão 6: Verificar Adjacência entre Vértices no GRAFO2
+    print("\nVerificação de Adjacência no GRAFO2.txt")
+    print("Vértices '1' e '2' são adjacentes?", grafo2.sao_adjacentes('1', '2'))
+    print("Vértices '1' e '4' são adjacentes?", grafo2.sao_adjacentes('1', '4'))
 
 if __name__ == "__main__":
     main()
