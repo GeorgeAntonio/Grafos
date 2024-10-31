@@ -21,6 +21,14 @@ class Grafo:
                     self.vertices.update([v1, v2])
                     self.arestas.append((v1, v2))  # Armazena as arestas
 
+    def calcular_grau(self):
+        # Calcula o grau de cada vértice e exibe o resultado
+        print("Grau de cada vértice:")
+        graus = {vertice: len(vizinhos) for vertice, vizinhos in self.grafo_lista.items()}
+        for vertice, grau in graus.items():
+            print(f"Vértice {vertice}: Grau {grau}")
+        return graus
+
     def construir_matriz_adjacencia(self):
         # Constrói a matriz de adjacência usando os vértices do grafo
         n = len(self.vertices)
@@ -117,6 +125,10 @@ def main():
     grafo1.lista_para_matriz()
     grafo1.exibir_matriz_adjacencia()
 
+    # Questão 5: Cálculo do Grau de cada Vértice
+    print("\nCálculo do Grau de cada Vértice para GRAFO1.txt")
+    grafo1.calcular_grau()
+
     print("\n" + "="*30 + "\n")
 
     # Repetir para o GRAFO2.txt
@@ -143,6 +155,10 @@ def main():
     print("\nConversão de Lista de Adjacência para Matriz de Adjacência")
     grafo2.lista_para_matriz()
     grafo2.exibir_matriz_adjacencia()
+
+    # Questão 5: Cálculo do Grau de cada Vértice para GRAFO2
+    print("\nCálculo do Grau de cada Vértice para GRAFO2.txt")
+    grafo2.calcular_grau()
 
 if __name__ == "__main__":
     main()
