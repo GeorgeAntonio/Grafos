@@ -1,4 +1,5 @@
 from collections import defaultdict
+from itertools import combinations
 
 class Grafo:
     def __init__(self):
@@ -29,9 +30,14 @@ class Grafo:
             print(f"Vértice {vertice}: Grau {grau}")
         return graus
 
-    def sao_adjacentes(self, v1, v2):
-        # Verifica se dois vértices são adjacentes
-        return v2 in self.grafo_lista[v1]
+    def verificar_todas_adjacencias(self):
+        # Verifica a adjacência entre todos os pares de vértices
+        print("\nVerificação de Adjacência entre Todos os Vértices:")
+        for v1, v2 in combinations(self.vertices, 2):
+            if v2 in self.grafo_lista[v1]:
+                print(f"Vértices '{v1}' e '{v2}' são adjacentes.")
+            else:
+                print(f"Vértices '{v1}' e '{v2}' não são adjacentes.")
 
     def total_vertices(self):
         # Retorna o número total de vértices no grafo
@@ -40,6 +46,37 @@ class Grafo:
     def total_arestas(self):
         # Retorna o número total de arestas no grafo
         return len(self.arestas)
+
+    def incluir_vertice(self, vertice):
+        # Adiciona um novo vértice ao grafo, sem conexões
+        if vertice not in self.vertices:
+            self.vertices.add(vertice)
+            self.grafo_lista[vertice] = []
+            print(f"Vértice '{vertice}' incluído com sucesso.")
+            self.exibir_lista_adjacencia()
+        else:
+            print(f"Vértice '{vertice}' já existe no grafo.")
+
+    def excluir_vertice(self, vertice):
+        # Remove um vértice do grafo, incluindo todas as arestas conectadas a ele
+        if vertice in self.vertices:
+            # Remover o vértice do conjunto de vértices
+            self.vertices.remove(vertice)
+            
+            # Remover o vértice da lista de adjacências de seus vizinhos
+            for vizinho in self.grafo_lista[vertice]:
+                self.grafo_lista[vizinho].remove(vertice)
+            
+            # Remover o vértice e suas conexões da lista de adjacências
+            del self.grafo_lista[vertice]
+            
+            # Remover todas as arestas associadas ao vértice
+            self.arestas = [(v1, v2) for v1, v2 in self.arestas if v1 != vertice and v2 != vertice]
+            
+            print(f"Vértice '{vertice}' e todas as suas conexões foram removidos com sucesso.")
+            self.exibir_lista_adjacencia()
+        else:
+            print(f"Vértice '{vertice}' não encontrado no grafo.")
 
     def construir_matriz_adjacencia(self):
         # Constrói a matriz de adjacência usando os vértices do grafo
@@ -141,16 +178,24 @@ def main():
     print("\nCálculo do Grau de cada Vértice para GRAFO1.txt")
     grafo1.calcular_grau()
 
-    # Questão 6: Verificar Adjacência entre Vértices
-    print("\nVerificação de Adjacência no GRAFO1.txt")
-    print("Vértices 'a' e 'b' são adjacentes?", grafo1.sao_adjacentes('a', 'b'))
-    print("Vértices 'a' e 'd' são adjacentes?", grafo1.sao_adjacentes('a', 'd'))
+    # Questão 6: Verificação de Adjacência entre Todos os Vértices para GRAFO1
+    grafo1.verificar_todas_adjacencias()
 
     # Questão 7: Número Total de Vértices
     print("\nNúmero Total de Vértices no GRAFO1.txt:", grafo1.total_vertices())
 
     # Questão 8: Número Total de Arestas
     print("\nNúmero Total de Arestas no GRAFO1.txt:", grafo1.total_arestas())
+
+    # Questão 9: Inclusão de um Novo Vértice
+    print("\nInclusão de um novo vértice no GRAFO1.txt")
+    novo_vertice = 'z'
+    grafo1.incluir_vertice(novo_vertice)
+
+    # Questão 10: Exclusão de um Vértice Existente
+    print("\nExclusão de um vértice existente no GRAFO1.txt")
+    vertice_para_excluir = 'a'  # Por exemplo, excluindo o vértice 'a'
+    grafo1.excluir_vertice(vertice_para_excluir)
 
     print("\n" + "="*30 + "\n")
 
@@ -183,18 +228,14 @@ def main():
     print("\nCálculo do Grau de cada Vértice para GRAFO2.txt")
     grafo2.calcular_grau()
 
-    # Questão 6: Verificar Adjacência entre Vértices no GRAFO2
-    print("\nVerificação de Adjacência no GRAFO2.txt")
-    print("Vértices '1' e '2' são adjacentes?", grafo2.sao_adjacentes('1', '2'))
-    print("Vértices '1' e '4' são adjacentes?", grafo2.sao_adjacentes('1', '4'))
+    # Questão 6: Verificação de Adjacência entre Todos os Vértices para GRAFO2
+    grafo2.verificar_todas_adjacencias()
 
     # Questão 7: Número Total de Vértices
     print("\nNúmero Total de Vértices no GRAFO2.txt:", grafo2.total_vertices())
 
     # Questão 8: Número Total de Arestas
     print("\nNúmero Total de Arestas no GRAFO2.txt:", grafo2.total_arestas())
-
-    print("\n" + "="*30 + "\n")
 
 if __name__ == "__main__":
     main()
