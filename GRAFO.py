@@ -37,6 +37,10 @@ class Grafo:
         # Retorna o número total de vértices no grafo
         return len(self.vertices)
 
+    def total_arestas(self):
+        # Retorna o número total de arestas no grafo
+        return len(self.arestas)
+
     def construir_matriz_adjacencia(self):
         # Constrói a matriz de adjacência usando os vértices do grafo
         n = len(self.vertices)
@@ -145,6 +149,9 @@ def main():
     # Questão 7: Número Total de Vértices
     print("\nNúmero Total de Vértices no GRAFO1.txt:", grafo1.total_vertices())
 
+    # Questão 8: Número Total de Arestas
+    print("\nNúmero Total de Arestas no GRAFO1.txt:", grafo1.total_arestas())
+
     print("\n" + "="*30 + "\n")
 
     # Repetir para o GRAFO2.txt
@@ -183,6 +190,11 @@ def main():
 
     # Questão 7: Número Total de Vértices
     print("\nNúmero Total de Vértices no GRAFO2.txt:", grafo2.total_vertices())
+
+    # Questão 8: Número Total de Arestas
+    print("\nNúmero Total de Arestas no GRAFO2.txt:", grafo2.total_arestas())
+
+    print("\n" + "="*30 + "\n")
 
 if __name__ == "__main__":
     main()
