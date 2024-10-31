@@ -78,6 +78,29 @@ class Grafo:
         else:
             print(f"Vértice '{vertice}' não encontrado no grafo.")
 
+    def eh_conexo(self):
+        # Verifica se o grafo é conexo usando DFS
+        if not self.vertices:
+            return True  # Um grafo vazio é considerado conexo
+
+        visitados = set()
+        inicial = next(iter(self.vertices))  # Pega um vértice inicial qualquer
+        self._dfs(inicial, visitados)
+
+        if len(visitados) == len(self.vertices):
+            print("O grafo é conexo.")
+            return True
+        else:
+            print("O grafo não é conexo.")
+            return False
+
+    def _dfs(self, vertice, visitados):
+        # Função auxiliar para realizar DFS
+        visitados.add(vertice)
+        for vizinho in self.grafo_lista[vertice]:
+            if vizinho not in visitados:
+                self._dfs(vizinho, visitados)
+
     def construir_matriz_adjacencia(self):
         # Constrói a matriz de adjacência usando os vértices do grafo
         n = len(self.vertices)
@@ -197,6 +220,10 @@ def main():
     vertice_para_excluir = 'a'  # Por exemplo, excluindo o vértice 'a'
     grafo1.excluir_vertice(vertice_para_excluir)
 
+    # Questão 11: Verificação de Conectividade para GRAFO1
+    print("\nVerificação de Conectividade no GRAFO1.txt")
+    grafo1.eh_conexo()
+
     print("\n" + "="*30 + "\n")
 
     # Repetir para o GRAFO2.txt
@@ -236,6 +263,10 @@ def main():
 
     # Questão 8: Número Total de Arestas
     print("\nNúmero Total de Arestas no GRAFO2.txt:", grafo2.total_arestas())
+
+    # Questão 11: Verificação de Conectividade para GRAFO2
+    print("\nVerificação de Conectividade no GRAFO2.txt")
+    grafo2.eh_conexo()
 
 if __name__ == "__main__":
     main()
