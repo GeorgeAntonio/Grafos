@@ -1,4 +1,4 @@
-from collections import defaultdict
+from collections import defaultdict, deque
 from itertools import combinations
 
 class Grafo:
@@ -100,6 +100,33 @@ class Grafo:
         for vizinho in self.grafo_lista[vertice]:
             if vizinho not in visitados:
                 self._dfs(vizinho, visitados)
+
+    def eh_bipartido(self):
+        # Verifica se o grafo é bipartido usando BFS
+        cor = {}
+        for vertice in self.vertices:
+            if vertice not in cor:  # Se o vértice ainda não foi colorido
+                if not self._bfs_bipartido(vertice, cor):
+                    print("O grafo não é bipartido.")
+                    return False
+        print("O grafo é bipartido.")
+        return True
+
+    def _bfs_bipartido(self, inicio, cor):
+        # Função auxiliar para verificar bipartição usando BFS
+        fila = deque([inicio])
+        cor[inicio] = 0  # Começamos a colorir o vértice inicial com a cor 0
+        while fila:
+            vertice = fila.popleft()
+            for vizinho in self.grafo_lista[vertice]:
+                if vizinho not in cor:
+                    # Atribui uma cor oposta ao vértice atual
+                    cor[vizinho] = 1 - cor[vertice]
+                    fila.append(vizinho)
+                elif cor[vizinho] == cor[vertice]:
+                    # Se um vizinho tiver a mesma cor, o grafo não é bipartido
+                    return False
+        return True
 
     def construir_matriz_adjacencia(self):
         # Constrói a matriz de adjacência usando os vértices do grafo
@@ -224,6 +251,10 @@ def main():
     print("\nVerificação de Conectividade no GRAFO1.txt")
     grafo1.eh_conexo()
 
+    # Questão 12: Verificação de Bipartição para GRAFO1
+    print("\nVerificação se o GRAFO1 é Bipartido")
+    grafo1.eh_bipartido()
+
     print("\n" + "="*30 + "\n")
 
     # Repetir para o GRAFO2.txt
@@ -267,6 +298,10 @@ def main():
     # Questão 11: Verificação de Conectividade para GRAFO2
     print("\nVerificação de Conectividade no GRAFO2.txt")
     grafo2.eh_conexo()
+
+    # Questão 12: Verificação de Bipartição para GRAFO2
+    print("\nVerificação se o GRAFO2 é Bipartido")
+    grafo2.eh_bipartido()
 
 if __name__ == "__main__":
     main()
