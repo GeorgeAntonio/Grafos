@@ -5,7 +5,6 @@ class Grafo:
         # Usando um dicionário para representar a lista de adjacência
         self.grafo_lista = defaultdict(list)
         self.grafo_matriz = []
-        self.matriz_incidencia = []
         self.vertices = set()  # Conjunto para armazenar os vértices únicos
         self.arestas = []      # Lista de arestas para a matriz de incidência
 
@@ -48,6 +47,32 @@ class Grafo:
             self.matriz_incidencia[i][k] = 1
             self.matriz_incidencia[j][k] = 1  # Aresta conecta dois vértices
 
+    def matriz_para_lista(self):
+        # Converte a matriz de adjacência para a lista de adjacência
+        n = len(self.grafo_matriz)
+        self.grafo_lista.clear()  # Limpa a lista de adjacência anterior
+        for i in range(n):
+            for j in range(n):
+                if self.grafo_matriz[i][j] == 1:
+                    v1 = list(self.vertices)[i]
+                    v2 = list(self.vertices)[j]
+                    if v2 not in self.grafo_lista[v1]:  # Evita duplicação de arestas
+                        self.grafo_lista[v1].append(v2)
+                        self.grafo_lista[v2].append(v1)
+
+    def lista_para_matriz(self):
+        # Converte a lista de adjacência para a matriz de adjacência
+        n = len(self.vertices)
+        vertices_ordenados = sorted(self.vertices)
+        indice = {v: i for i, v in enumerate(vertices_ordenados)}  # Mapeia cada vértice a um índice
+        self.grafo_matriz = [[0] * n for _ in range(n)]
+
+        for v1, vizinhos in self.grafo_lista.items():
+            for v2 in vizinhos:
+                i, j = indice[v1], indice[v2]
+                self.grafo_matriz[i][j] = 1
+                self.grafo_matriz[j][i] = 1  # Grafo não direcionado
+
     def exibir_lista_adjacencia(self):
         # Exibe a lista de adjacência para cada vértice
         print("Lista de Adjacências:")
@@ -83,6 +108,15 @@ def main():
     print("\nRepresentação do GRAFO1.txt - Matriz de Incidência")
     grafo1.exibir_matriz_incidencia()
 
+    # Questão 4: Conversão de Matriz de Adjacência para Lista de Adjacência e vice-versa
+    print("\nConversão de Matriz de Adjacência para Lista de Adjacência")
+    grafo1.matriz_para_lista()
+    grafo1.exibir_lista_adjacencia()
+
+    print("\nConversão de Lista de Adjacência para Matriz de Adjacência")
+    grafo1.lista_para_matriz()
+    grafo1.exibir_matriz_adjacencia()
+
     print("\n" + "="*30 + "\n")
 
     # Repetir para o GRAFO2.txt
@@ -100,6 +134,15 @@ def main():
     grafo2.construir_matriz_incidencia()
     print("\nRepresentação do GRAFO2.txt - Matriz de Incidência")
     grafo2.exibir_matriz_incidencia()
+
+    # Questão 4: Conversão de Matriz de Adjacência para Lista de Adjacência e vice-versa para GRAFO2
+    print("\nConversão de Matriz de Adjacência para Lista de Adjacência")
+    grafo2.matriz_para_lista()
+    grafo2.exibir_lista_adjacencia()
+
+    print("\nConversão de Lista de Adjacência para Matriz de Adjacência")
+    grafo2.lista_para_matriz()
+    grafo2.exibir_matriz_adjacencia()
 
 if __name__ == "__main__":
     main()
