@@ -128,6 +128,24 @@ class Grafo:
                     return False
         return True
 
+    def busca_em_largura(self, vertice_inicial):
+        # Realiza a busca em largura a partir de um vértice específico
+        visitados = set()
+        fila = deque([vertice_inicial])
+        resultado = []
+
+        while fila:
+            vertice = fila.popleft()
+            if vertice not in visitados:
+                visitados.add(vertice)
+                resultado.append(vertice)
+                for vizinho in self.grafo_lista[vertice]:
+                    if vizinho not in visitados:
+                        fila.append(vizinho)
+
+        print(f"Ordem de visitação na busca em largura a partir de '{vertice_inicial}':", resultado)
+        return resultado
+
     def construir_matriz_adjacencia(self):
         # Constrói a matriz de adjacência usando os vértices do grafo
         n = len(self.vertices)
@@ -302,6 +320,13 @@ def main():
     # Questão 12: Verificação de Bipartição para GRAFO2
     print("\nVerificação se o GRAFO2 é Bipartido")
     grafo2.eh_bipartido()
+
+    # Questão 13: Busca em Largura para GRAFO3
+    print("\nBusca em Largura no GRAFO3 a partir de um vértice específico")
+    grafo3 = Grafo()
+    grafo3.ler_arquivo("GRAFO3.txt")
+    vertice_inicial = 'a'  # Defina o vértice inicial para a busca
+    grafo3.busca_em_largura(vertice_inicial)
 
 if __name__ == "__main__":
     main()
