@@ -145,6 +145,22 @@ class Grafo:
 
         print(f"Ordem de visitação na busca em largura a partir de '{vertice_inicial}':", resultado)
         return resultado
+    
+    def busca_em_profundidade(self, vertice_inicial):
+        # Realiza a busca em profundidade a partir de um vértice específico
+        visitados = set()
+        resultado = []
+        self._dfs_exploracao(vertice_inicial, visitados, resultado)
+        print(f"Ordem de visitação na busca em profundidade a partir de '{vertice_inicial}':", resultado)
+        return resultado
+
+    def _dfs_exploracao(self, vertice, visitados, resultado):
+        # Função auxiliar para a DFS explorando o grafo e armazenando o caminho percorrido
+        visitados.add(vertice)
+        resultado.append(vertice)
+        for vizinho in self.grafo_lista[vertice]:
+            if vizinho not in visitados:
+                self._dfs_exploracao(vizinho, visitados, resultado)
 
     def construir_matriz_adjacencia(self):
         # Constrói a matriz de adjacência usando os vértices do grafo
@@ -273,6 +289,18 @@ def main():
     print("\nVerificação se o GRAFO1 é Bipartido")
     grafo1.eh_bipartido()
 
+    # Questão 14: Busca em Largura para GRAFO1
+    print("\nBusca em Largura no GRAFO1 a partir de um vértice específico")
+    grafo1 = Grafo()
+    grafo1.ler_arquivo("GRAFO1.txt")
+    vertice_inicial = 'a'  # Defina o vértice inicial para a busca
+    grafo1.busca_em_largura(vertice_inicial)
+
+    # Questão 15: Busca em Profundidade para GRAFO1
+    print("\nBusca em Profundidade no GRAFO1 a partir de um vértice específico")
+    vertice_inicial_grafo1 = 'a'  # Defina o vértice inicial para a busca
+    grafo1.busca_em_profundidade(vertice_inicial_grafo1)
+
     print("\n" + "="*30 + "\n")
 
     # Repetir para o GRAFO2.txt
@@ -321,12 +349,19 @@ def main():
     print("\nVerificação se o GRAFO2 é Bipartido")
     grafo2.eh_bipartido()
 
-    # Questão 13: Busca em Largura para GRAFO3
+    print("\n" + "="*30 + "\n")
+
+    # Questão 14: Busca em Largura para GRAFO3
     print("\nBusca em Largura no GRAFO3 a partir de um vértice específico")
     grafo3 = Grafo()
     grafo3.ler_arquivo("GRAFO3.txt")
     vertice_inicial = 'a'  # Defina o vértice inicial para a busca
     grafo3.busca_em_largura(vertice_inicial)
+
+    # Questão 15: Busca em Profundidade para GRAFO3
+    print("\nBusca em Profundidade no GRAFO3 a partir de um vértice específico")
+    vertice_inicial_grafo3 = 'a'  # Defina o vértice inicial para a busca
+    grafo3.busca_em_profundidade(vertice_inicial_grafo3)
 
 if __name__ == "__main__":
     main()
