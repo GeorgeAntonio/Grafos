@@ -232,6 +232,61 @@ class Grafo:
         for linha in self.matriz_incidencia:
             print(" ".join(map(str, linha)))
 
+    def encontrar_articulacoes_blocos(self):
+        discovery_time = {}
+        lowpt = {}
+        parent = {}
+        articulacoes = set()
+        biconectados = []
+        stack = []
+        time = 0
+
+        def dfs(v):
+            nonlocal time
+            discovery_time[v] = lowpt[v] = time
+            time += 1
+            children = 0
+            is_articulacao = False
+
+            for vizinho in self.grafo_lista[v]:
+                if vizinho not in discovery_time:
+                    stack.append((v, vizinho))
+                    parent[vizinho] = v
+                    children += 1
+                    dfs(vizinho)
+                    
+                    lowpt[v] = min(lowpt[v], lowpt[vizinho])
+                    
+                    if parent.get(v) is None and children > 1:
+                        is_articulacao = True
+                    elif parent.get(v) is not None and lowpt[vizinho] >= discovery_time[v]:
+                        is_articulacao = True
+                        componente = []
+                        while stack[-1] != (v, vizinho):
+                            componente.append(stack.pop())
+                        componente.append(stack.pop())
+                        biconectados.append(componente)
+                        
+                elif vizinho != parent.get(v) and discovery_time[vizinho] < discovery_time[v]:
+                    lowpt[v] = min(lowpt[v], discovery_time[vizinho])
+                    stack.append((v, vizinho))
+
+            if is_articulacao:
+                articulacoes.add(v)
+
+        for v in self.vertices:
+            if v not in discovery_time:
+                dfs(v)
+                if stack:
+                    biconectados.append(stack[:])
+                    stack.clear()
+
+        print("Articulações (Pontos de Corte):", articulacoes)
+        print("Blocos (Componentes Biconectados):")
+        for i, componente in enumerate(biconectados, 1):
+            print(f"Bloco {i}: {componente}")
+        return articulacoes, biconectados
+    
 def main():
     # Questão 1: Representação do Grafo a partir da Lista de Adjacências
     print("Representação do GRAFO1.txt - Lista de Adjacências")
@@ -362,6 +417,12 @@ def main():
     print("\nBusca em Profundidade no GRAFO3 a partir de um vértice específico")
     vertice_inicial_grafo3 = 'a'  # Defina o vértice inicial para a busca
     grafo3.busca_em_profundidade(vertice_inicial_grafo3)
+
+    # Questão 16: Determinação de Articulações e Blocos para GRAFO3
+    print("\nDeterminação de Articulações e Blocos no GRAFO3.txt")
+    grafo3 = Grafo()
+    grafo3.ler_arquivo("GRAFO3.txt")
+    grafo3.encontrar_articulacoes_blocos()
 
 if __name__ == "__main__":
     main()
