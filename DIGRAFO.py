@@ -106,6 +106,25 @@ class Digrafo:
         for vertice in vertices:
             print(f"Vértice {vertice}: Entrada = {self.entrada.get(vertice, 'N/A')}, Saída = {self.saida.get(vertice, 'N/A')}")
 
+    def grafo_subjacente(self):
+        # Cria um novo dicionário para o grafo subjacente (não direcionado)
+        grafo_subjacente = defaultdict(list)
+
+        # Percorre a lista de adjacência do digrafo
+        for vertice, vizinhos in self.digrafo.items():
+            # Adiciona cada vizinho ao grafo subjacente
+            for vizinho in vizinhos:
+                grafo_subjacente[vertice].append(vizinho)
+                # Adiciona a aresta inversa para o grafo subjacente (não direcionado)
+                grafo_subjacente[vizinho].append(vertice)
+
+        # Exibe o grafo subjacente
+        print("Grafo Subjacente:")
+        for vertice, vizinhos in grafo_subjacente.items():
+            print(f"{vertice}: {vizinhos}")
+
+
+
 def main():
     # Representação do Digrafo a partir da Lista de Arestas
     print("\nRepresentação do DIGRAFO1.txt a partir da Lista de Arestas")
@@ -124,6 +143,9 @@ def main():
 
     print("\nBusca em Profundidade para o DIGRAFO2.txt")
     digrafo2.busca_profundidade()
+
+    print("\nDeterminação do Grafo subjacente para o DIGRAFO1.txt")
+    digrafo1.grafo_subjacente()
 
 if __name__ == "__main__":
     main()
