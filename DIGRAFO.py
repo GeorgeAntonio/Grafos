@@ -123,7 +123,39 @@ class Digrafo:
         for vertice, vizinhos in grafo_subjacente.items():
             print(f"{vertice}: {vizinhos}")
 
+    def matriz_incidencia_para_estrela_direta(self):
+        estrela_direta = [[0] * self.n_vertices for _ in range(self.n_arestas)]
 
+        # Itera pelas arestas (colunas) e vértices (linhas) da matriz de incidência
+        for i in range(self.n_arestas):
+            for j in range(self.n_vertices):
+                # Se o valor na matriz de incidência for -1, a aresta é incidente no vértice como origem
+                if self.matriz_incidencia[j][i] == -1:
+                    estrela_direta[i][j] = 1  # Origem da aresta
+                # Se o valor na matriz de incidência for 1, a aresta é incidente no vértice como destino
+                elif self.matriz_incidencia[j][i] == 1:
+                    estrela_direta[i][j] = -1  # Destino da aresta
+
+        print("\nEstrela Direta:")
+        for linha in estrela_direta:
+            print(" ".join(map(str, linha)))
+
+    def estrela_direta_para_matriz_incidencia(self):
+        nova_matriz_incidencia = [[0] * self.n_arestas for _ in range(self.n_vertices)]
+
+        # Itera pelas arestas (colunas) e vértices (linhas) da estrela direta
+        for j in range(self.n_arestas):
+            for i in range(self.n_vertices):
+                # Se o valor na estrela direta for 1, o vértice é a origem da aresta
+                if self.matriz_incidencia[i][j] == 1:
+                    nova_matriz_incidencia[i][j] = -1  # Origem da aresta
+                # Se o valor na estrela direta for -1, o vértice é o destino da aresta
+                elif self.matriz_incidencia[i][j] == -1:
+                    nova_matriz_incidencia[i][j] = 1  # Destino da aresta
+
+        print("\nMatriz de Incidência Reconstruída:")
+        for linha in nova_matriz_incidencia:
+            print(" ".join(map(str, linha)))
 
 def main():
     # Representação do Digrafo a partir da Lista de Arestas
@@ -146,6 +178,12 @@ def main():
 
     print("\nDeterminação do Grafo subjacente para o DIGRAFO1.txt")
     digrafo1.grafo_subjacente()
+
+    print("\nConversão de Matriz de Incidência para Estrela Direta (DIGRAFO1.txt):")
+    digrafo1.matriz_incidencia_para_estrela_direta()
+
+    print("\nConversão de Estrela Direta para Matriz de Incidência (DIGRAFO1.txt):")
+    digrafo1.estrela_direta_para_matriz_incidencia()
 
 if __name__ == "__main__":
     main()
