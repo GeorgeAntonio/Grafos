@@ -128,68 +128,6 @@ class Grafo:
                     return False
         return True
 
-    def codigo_pruffer_para_arvore(self, codigo_pruffer):
-        n = len(codigo_pruffer) + 2  # Número de vértices na árvore
-        self.vertices = set(range(1, n + 1))  # Conjunto de vértices
-        self.grafo_lista = defaultdict(list)  # Lista de adjacências
-        grau = defaultdict(int)  # Grau de cada vértice
-
-        # Inicializa o grau dos vértices com 1 (cada vértice tem um grau inicial de 1)
-        for i in range(1, n + 1):
-            grau[i] = 1
-
-        # Incrementa o grau dos vértices correspondentes ao código de Prüffer
-        for v in codigo_pruffer:
-            grau[v] += 1
-
-        # Cria a árvore a partir do código de Prüffer
-        for i in range(n - 2):
-            # Encontra o menor vértice com grau 1
-            u = min(self.vertices, key=lambda x: grau[x])
-            # Encontra o vértice v do código de Prüffer
-            v = codigo_pruffer[i]
-            # Conecta os vértices u e v na lista de adjacências
-            self.grafo_lista[u].append(v)
-            self.grafo_lista[v].append(u)
-            # Decrementa o grau dos vértices u e v
-            grau[u] -= 1
-            grau[v] -= 1
-            # Remove o vértice u da lista de vértices, pois ele já foi usado
-            self.vertices.remove(u)
-
-        # Conecta os dois últimos vértices restantes
-        u = min(self.vertices)
-        v = next(iter(self.vertices - {u}))
-        self.grafo_lista[u].append(v)
-        self.grafo_lista[v].append(u)
-
-        # Converte a lista de adjacência para a matriz de adjacência
-        self.lista_para_matriz()
-
-        return self.grafo_matriz
-
-    def arvore_para_codigo_pruffer(self):
-        n = len(self.grafo_matriz)  # Número de vértices na árvore
-        grau = [len(vizinhos) for vizinhos in self.grafo_lista.values()]
-        codigo_pruffer = []
-
-        # Repete até restarem apenas dois vértices
-        while len(codigo_pruffer) < n - 2:
-            # Encontra o menor vértice com grau 1
-            u = grau.index(1) + 1  # +1 para ajustar o índice
-            # Encontra o vizinho de u (o único)
-            v = self.grafo_lista[u][0]
-            # Adiciona o vértice v ao código de Prüffer
-            codigo_pruffer.append(v)
-            # Remove a aresta (u, v) da árvore
-            self.grafo_lista[u].remove(v)
-            self.grafo_lista[v].remove(u)
-            # Decrementa o grau dos vértices u e v
-            grau[u - 1] -= 1
-            grau[v - 1] -= 1
-
-        return codigo_pruffer
-
 
     def busca_em_largura(self, vertice_inicial):
         # Realiza a busca em largura a partir de um vértice específico
@@ -469,14 +407,6 @@ def main():
 
     print("\n" + "="*30 + "\n")
 
-
-    # Questão 13.1: Gerar o código de Prüffer a partir de uma árvore
-    codigo_pruffer = grafo.arvore_para_codigo_pruffer()
-    print("Código de Prüffer:", codigo_pruffer)
-
-    # Questão 13.1 Gerar a árvore a partir do código de Prüffer (a matriz de adjacência é impressa diretamente pela função)
-    grafo.codigo_pruffer_para_arvore(codigo_pruffer)
-    
     # Questão 14: Busca em Largura para GRAFO3
     print("\nBusca em Largura no GRAFO3 a partir de um vértice específico")
     grafo3 = Grafo()

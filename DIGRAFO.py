@@ -140,17 +140,20 @@ class Digrafo:
         for linha in estrela_direta:
             print(" ".join(map(str, linha)))
 
-    def estrela_direta_para_matriz_incidencia(self):
+        # Retorna a estrela direta para uso posterior
+        return estrela_direta
+
+    def estrela_direta_para_matriz_incidencia(self, estrela_direta):
         nova_matriz_incidencia = [[0] * self.n_arestas for _ in range(self.n_vertices)]
 
         # Itera pelas arestas (colunas) e vértices (linhas) da estrela direta
         for j in range(self.n_arestas):
             for i in range(self.n_vertices):
                 # Se o valor na estrela direta for 1, o vértice é a origem da aresta
-                if self.matriz_incidencia[i][j] == 1:
+                if estrela_direta[j][i] == 1:
                     nova_matriz_incidencia[i][j] = -1  # Origem da aresta
                 # Se o valor na estrela direta for -1, o vértice é o destino da aresta
-                elif self.matriz_incidencia[i][j] == -1:
+                elif estrela_direta[j][i] == -1:
                     nova_matriz_incidencia[i][j] = 1  # Destino da aresta
 
         print("\nMatriz de Incidência Reconstruída:")
@@ -213,10 +216,10 @@ def main():
     digrafo1.grafo_subjacente()
 
     print("\nConversão de Matriz de Incidência para Estrela Direta (DIGRAFO1.txt):")
-    digrafo1.matriz_incidencia_para_estrela_direta()
+    estrela_direta = digrafo1.matriz_incidencia_para_estrela_direta()  # Salva a estrela direta
 
     print("\nConversão de Estrela Direta para Matriz de Incidência (DIGRAFO1.txt):")
-    digrafo1.estrela_direta_para_matriz_incidencia()
+    digrafo1.estrela_direta_para_matriz_incidencia(estrela_direta)  # Usa a estrela direta salva
 
     print("\nConversão de Matriz de Adjacência para Estrela Reversa (DIGRAFO1.txt):")
     estrela_reversa = digrafo1.matriz_adjacencia_para_estrela_reversa()  
