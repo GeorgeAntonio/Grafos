@@ -2,14 +2,20 @@ from collections import defaultdict
 
 class Digrafo:
     def __init__(self):
-        # Usando um dicionário para representar a lista de adjacência
+        # Inicializa as estruturas necessárias
         self.digrafo = defaultdict(list)
         self.tempo = 0
         self.entrada = {}
         self.saida = {}
+        self.vertices = set()
+        self.arestas = []
+        self.matriz_adjacencia = []
+        self.matriz_incidencia = []
+        self.n_vertices = 0
+        self.n_arestas = 0
 
     def ler_lista_arestas(self, arquivo):
-        # Lê o arquivo e preenche a lista de adjacências para um digrafo a partir de uma lista de arestas
+        # Lê o arquivo e preenche a lista de adjacência e matriz de adjacência
         try:
             with open(arquivo, 'r') as f:
                 linhas = f.readlines()
@@ -18,66 +24,56 @@ class Digrafo:
                     print(f"O arquivo {arquivo} está vazio.")
                     return
                 
-                # Ignora a primeira linha, que contém o número de vértices
+                # Lê a primeira linha para obter o número de vértices
+                self.n_vertices = int(linhas[0].strip())
+                # Inicializa a matriz de adjacência com zeros
+                self.matriz_adjacencia = [[0] * self.n_vertices for _ in range(self.n_vertices)]
+                self.arestas = []  # Limpa a lista de arestas para preencher a partir do arquivo
+
+                # Preenche a lista de adjacência e a matriz de adjacência
                 for linha in linhas[1:]:
                     linha = linha.strip()
-                    if linha and ',' in linha:  # Verifica se a linha não está vazia e contém uma vírgula
-                        v1, v2 = linha.split(',')
-                        self.digrafo[v1].append(v2)  # Adiciona a aresta direcionada de v1 para v2
+                    if linha and ',' in linha:
+                        v1, v2 = map(int, linha.split(','))
+                        self.digrafo[str(v1)].append(str(v2))
+                        self.matriz_adjacencia[v1 - 1][v2 - 1] = 1
+                        self.vertices.update([str(v1), str(v2)])
+                        self.arestas.append((v1, v2))  # Armazena a aresta como tupla (v1, v2)
                 
-                print(f"O arquivo {arquivo} foi lido com sucesso (Lista de Arestas).")
+                print(f"\nMatriz de Adjacência para {arquivo}:")
+                for linha in self.matriz_adjacencia:
+                    print(" ".join(map(str, linha)))
                 
+                # Após preencher as arestas, gera a matriz de incidência
+                self.gerar_matriz_incidencia()
+
         except FileNotFoundError:
             print(f"O arquivo {arquivo} não foi encontrado.")
         except ValueError:
             print(f"O arquivo {arquivo} contém dados inválidos.")
 
-    def ler_matriz_incidencia(self, arquivo):
-        # Lê o arquivo e exibe a matriz de incidência para um digrafo
-        try:
-            with open(arquivo, 'r') as f:
-                linhas = f.readlines()
-                
-                if not linhas:
-                    print(f"O arquivo {arquivo} está vazio.")
-                    return
-                
-                # Exibir a matriz de incidência lida do arquivo
-                print(f"\nMatriz de Incidência para {arquivo}:")
-                n = int(linhas[0].strip())  # Primeira linha indica o número de vértices
-                matriz_incidencia = []
-                
-                for j in range(1, len(linhas[1:]) + 1):
-                    linha = [int(x) for x in linhas[j].strip().split()]
-                    matriz_incidencia.append(linha)
-                    print(" ".join(map(str, linha)))  # Imprimir cada linha da matriz
+    def gerar_matriz_incidencia(self):
+        # Gera a matriz de incidência a partir das arestas
+        self.n_arestas = len(self.arestas)
+        self.matriz_incidencia = [[0] * self.n_arestas for _ in range(self.n_vertices)]
 
-                    # Conversão para lista de adjacência
-                    origem = -1
-                    destino = -1
-                    for i, valor in enumerate(linha):
-                        if valor == -1:
-                            origem = str(i)
-                        elif valor == 1:
-                            destino = str(i)
-                    
-                    if origem != -1 and destino != -1:
-                        self.digrafo[origem].append(destino)  # Aresta direcionada de origem para destino
-                
-                print(f"O arquivo {arquivo} foi lido e convertido com sucesso para lista de adjacência (Matriz de Incidência).")
-                
-        except FileNotFoundError:
-            print(f"O arquivo {arquivo} não foi encontrado.")
-        except ValueError:
-            print(f"O arquivo {arquivo} contém dados inválidos.")
+        for j, (v1, v2) in enumerate(self.arestas):
+            # Ajusta índices para a matriz (vértices começam em 1 no arquivo)
+            self.matriz_incidencia[v1 - 1][j] = -1  # Origem da aresta
+            self.matriz_incidencia[v2 - 1][j] = 1   # Destino da aresta
+
+        print("\nMatriz de Incidência:")
+        for linha in self.matriz_incidencia:
+            print(" ".join(map(str, linha)))
 
     def exibir_lista_adjacencia(self):
         # Exibe a lista de adjacência para cada vértice
         print("Lista de Adjacências:")
         if not self.digrafo:
             print("O digrafo está vazio ou não foi carregado corretamente.")
-        for vertice, vizinhos in self.digrafo.items():
-            print(f"{vertice}: {vizinhos}")
+        else:
+            for vertice, vizinhos in self.digrafo.items():
+                print(f"{vertice}: {vizinhos}")
 
     def dfs(self, vertice, visitado):
         # Realiza a busca em profundidade, registrando os tempos de entrada e saída
@@ -101,46 +97,33 @@ class Digrafo:
         self.entrada = {}
         self.saida = {}
 
-        # Criar uma lista estática dos vértices para evitar modificação durante a iteração
         vertices = list(self.digrafo.keys())
         for vertice in vertices:
             if vertice not in visitado:
                 self.dfs(vertice, visitado)
 
-        # Exibindo tempos de entrada e saída
         print("\nTempos de Entrada e Saída:")
         for vertice in vertices:
-            print(f"Vértice {vertice}: Entrada = {self.entrada[vertice]}, Saída = {self.saida[vertice]}")
+            print(f"Vértice {vertice}: Entrada = {self.entrada.get(vertice, 'N/A')}, Saída = {self.saida.get(vertice, 'N/A')}")
 
 def main():
     # Representação do Digrafo a partir da Lista de Arestas
+    print("\nRepresentação do DIGRAFO1.txt a partir da Lista de Arestas")
+    digrafo1 = Digrafo()
+    digrafo1.ler_lista_arestas("DIGRAFO1.txt")
+    #digrafo1.exibir_lista_adjacencia()
+
     print("\nRepresentação do DIGRAFO2.txt a partir da Lista de Arestas")
     digrafo2 = Digrafo()
     digrafo2.ler_lista_arestas("DIGRAFO2.txt")
-    digrafo2.exibir_lista_adjacencia()
+    #digrafo2.exibir_lista_adjacencia()
 
-    print("\nRepresentação do DIGRAFO3.txt a partir da Lista de Arestas")
-    digrafo3 = Digrafo()
-    digrafo3.ler_lista_arestas("DIGRAFO3.txt")
-    digrafo3.exibir_lista_adjacencia()
+    # Busca em profundidade e exibição dos tempos de entrada e saída
+    print("\nBusca em Profundidade para o DIGRAFO1.txt")
+    digrafo1.busca_profundidade()
 
-    # Representação do Digrafo a partir da Matriz de Incidência
-    print("\nRepresentação do DIGRAFO2.txt a partir da Matriz de Incidência")
-    digrafo2_matriz = Digrafo()
-    digrafo2_matriz.ler_matriz_incidencia("DIGRAFO2.txt")
-    digrafo2_matriz.exibir_lista_adjacencia()
-
-    print("\nRepresentação do DIGRAFO3.txt a partir da Matriz de Incidência")
-    digrafo3_matriz = Digrafo()
-    digrafo3_matriz.ler_matriz_incidencia("DIGRAFO3.txt")
-    digrafo3_matriz.exibir_lista_adjacencia()
-
-    # Executar a busca em profundidade e exibir tempos de entrada e saída
     print("\nBusca em Profundidade para o DIGRAFO2.txt")
     digrafo2.busca_profundidade()
-
-    print("\nBusca em Profundidade para o DIGRAFO3.txt")
-    digrafo3.busca_profundidade()
 
 if __name__ == "__main__":
     main()
