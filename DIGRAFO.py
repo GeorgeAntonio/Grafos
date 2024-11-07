@@ -158,32 +158,35 @@ class Digrafo:
             print(" ".join(map(str, linha)))
 
     def matriz_adjacencia_para_estrela_reversa(self):
-            estrela_reversa = [[0] * self.n_arestas for _ in range(self.n_vertices)]
-            arestas_enumeradas = list(enumerate(self.arestas))
+        estrela_reversa = [[0] * self.n_arestas for _ in range(self.n_vertices)]
+        arestas_enumeradas = list(enumerate(self.arestas))
 
-            # Percorre a matriz de adjacência
-            for i in range(self.n_vertices):
-                for j in range(self.n_vertices):
-                    # Se houver uma aresta (i, j)
-                    if self.matriz_adjacencia[i][j] == 1:
-                        # Encontra o índice da aresta (i, j) na lista de arestas enumeradas
-                        for k, (v1, v2) in arestas_enumeradas:
-                            if v1 == i + 1 and v2 == j + 1:
-                                estrela_reversa[i][k] = 1  # Define a entrada na estrela reversa como 1
-                                break
+        # Percorre a matriz de adjacência
+        for i in range(self.n_vertices):
+            for j in range(self.n_vertices):
+                # Se houver uma aresta (i, j)
+                if self.matriz_adjacencia[i][j] == 1:
+                    # Encontra o índice da aresta (i, j) na lista de arestas enumeradas
+                    for k, (v1, v2) in arestas_enumeradas:
+                        if v1 == i + 1 and v2 == j + 1:
+                            estrela_reversa[i][k] = 1  # Define a entrada na estrela reversa como 1
+                            break
 
-            print("\nEstrela Reversa:")
-            for linha in estrela_reversa:
-                print(" ".join(map(str, linha)))
+        print("\nEstrela Reversa:")
+        for linha in estrela_reversa:
+            print(" ".join(map(str, linha)))
 
-    def estrela_reversa_para_matriz_adjacencia(self):
+        # Retorna a estrela reversa para uso posterior
+        return estrela_reversa
+
+    def estrela_reversa_para_matriz_adjacencia(self, estrela_reversa):
         nova_matriz_adjacencia = [[0] * self.n_vertices for _ in range(self.n_vertices)]
 
         # Percorre a estrela reversa
         for i in range(self.n_vertices):
             for j in range(self.n_arestas):
                 # Se houver uma entrada na estrela reversa
-                if self.matriz_incidencia[i][j] == 1:
+                if estrela_reversa[i][j] == 1:
                     # Obtém a aresta correspondente da lista de arestas enumeradas
                     v1, v2 = self.arestas[j]
                     # Define a entrada na matriz de adjacência como 1
@@ -192,6 +195,7 @@ class Digrafo:
         print("\nMatriz de Adjacência Reconstruída:")
         for linha in nova_matriz_adjacencia:
             print(" ".join(map(str, linha)))
+
 
 def main():
     # Representação do Digrafo a partir da Lista de Arestas
@@ -205,13 +209,6 @@ def main():
     digrafo2.ler_lista_arestas("DIGRAFO2.txt")
     #digrafo2.exibir_lista_adjacencia()
 
-    # Busca em profundidade e exibição dos tempos de entrada e saída
-    print("\nBusca em Profundidade para o DIGRAFO1.txt")
-    digrafo1.busca_profundidade()
-
-    print("\nBusca em Profundidade para o DIGRAFO2.txt")
-    digrafo2.busca_profundidade()
-
     print("\nDeterminação do Grafo subjacente para o DIGRAFO1.txt")
     digrafo1.grafo_subjacente()
 
@@ -222,10 +219,18 @@ def main():
     digrafo1.estrela_direta_para_matriz_incidencia()
 
     print("\nConversão de Matriz de Adjacência para Estrela Reversa (DIGRAFO1.txt):")
-    digrafo1.matriz_adjacencia_para_estrela_reversa()
+    estrela_reversa = digrafo1.matriz_adjacencia_para_estrela_reversa()  
 
     print("\nConversão de Estrela Reversa para Matriz de Adjacência (DIGRAFO1.txt):")
-    digrafo1.estrela_reversa_para_matriz_adjacencia()
+    digrafo1.estrela_reversa_para_matriz_adjacencia(estrela_reversa)  
     
+    # Busca em profundidade e exibição dos tempos de entrada e saída
+    print("\nBusca em Profundidade para o DIGRAFO1.txt")
+    digrafo1.busca_profundidade()
+
+    print("\nBusca em Profundidade para o DIGRAFO2.txt")
+    digrafo2.busca_profundidade()
+
+
 if __name__ == "__main__":
     main()
