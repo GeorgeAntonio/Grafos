@@ -21,5 +21,10 @@ Este projeto foi desenvolvido para explorar a primeira unidade da matéria de Gr
     ```
 4. Execute o programa de grafos (GRAFO.py) ou digrafos (DIGRAFO.py):
     ```bash
-    python main.py
+    python GRAFO.py
+    ```
+    ou 
+
+    ```bash
+    python DIGRAFO.py
     ```
