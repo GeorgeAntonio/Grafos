@@ -157,6 +157,42 @@ class Digrafo:
         for linha in nova_matriz_incidencia:
             print(" ".join(map(str, linha)))
 
+    def matriz_adjacencia_para_estrela_reversa(self):
+            estrela_reversa = [[0] * self.n_arestas for _ in range(self.n_vertices)]
+            arestas_enumeradas = list(enumerate(self.arestas))
+
+            # Percorre a matriz de adjacência
+            for i in range(self.n_vertices):
+                for j in range(self.n_vertices):
+                    # Se houver uma aresta (i, j)
+                    if self.matriz_adjacencia[i][j] == 1:
+                        # Encontra o índice da aresta (i, j) na lista de arestas enumeradas
+                        for k, (v1, v2) in arestas_enumeradas:
+                            if v1 == i + 1 and v2 == j + 1:
+                                estrela_reversa[i][k] = 1  # Define a entrada na estrela reversa como 1
+                                break
+
+            print("\nEstrela Reversa:")
+            for linha in estrela_reversa:
+                print(" ".join(map(str, linha)))
+
+    def estrela_reversa_para_matriz_adjacencia(self):
+        nova_matriz_adjacencia = [[0] * self.n_vertices for _ in range(self.n_vertices)]
+
+        # Percorre a estrela reversa
+        for i in range(self.n_vertices):
+            for j in range(self.n_arestas):
+                # Se houver uma entrada na estrela reversa
+                if self.matriz_incidencia[i][j] == 1:
+                    # Obtém a aresta correspondente da lista de arestas enumeradas
+                    v1, v2 = self.arestas[j]
+                    # Define a entrada na matriz de adjacência como 1
+                    nova_matriz_adjacencia[v1 - 1][v2 - 1] = 1
+
+        print("\nMatriz de Adjacência Reconstruída:")
+        for linha in nova_matriz_adjacencia:
+            print(" ".join(map(str, linha)))
+
 def main():
     # Representação do Digrafo a partir da Lista de Arestas
     print("\nRepresentação do DIGRAFO1.txt a partir da Lista de Arestas")
@@ -185,5 +221,11 @@ def main():
     print("\nConversão de Estrela Direta para Matriz de Incidência (DIGRAFO1.txt):")
     digrafo1.estrela_direta_para_matriz_incidencia()
 
+    print("\nConversão de Matriz de Adjacência para Estrela Reversa (DIGRAFO1.txt):")
+    digrafo1.matriz_adjacencia_para_estrela_reversa()
+
+    print("\nConversão de Estrela Reversa para Matriz de Adjacência (DIGRAFO1.txt):")
+    digrafo1.estrela_reversa_para_matriz_adjacencia()
+    
 if __name__ == "__main__":
     main()
